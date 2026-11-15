@@ -343,6 +343,7 @@
     G.ellipse(ctx, bx, by, 20, 20, { fill: rad(ctx, bx - 5, by - 5, 2, 22, [[0, '#FFFFFF'], [1, '#B33A2A']]), lw: 3, seed: 2094 });
     for (const r of [ev.ring1, ev.ring2]) { const a = t - r; if (a > 0 && a < 0.6) for (let k = 0; k < 3; k++) { ctx.save(); ctx.globalAlpha = 1 - a / 0.6; ctx.strokeStyle = '#FFF3C4'; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(bx, by, 40 + k * 30 + a * 120, -0.8, 0.8); ctx.stroke(); ctx.restore(); } }
     road(ctx, 1300);
+    for (const r of [ev.ring1, ev.ring2]) { const a = t - r; if (a >= 0 && a < 0.1) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = `rgba(255,240,200,${0.45 * (1 - a / 0.1)})`; ctx.fillRect(-100, -100, W + 200, H + 200); ctx.restore(); } }
     const press = [ev.ring1, ev.ring2].some((r) => t > r - 0.08 && t < r + 0.18);
     const after = t > ev.ring2 + 0.1;
     Ch.person(ctx, { x: 700, y: 1460, s: 1.05, pose: 'stand', style: CAST.arjun, handR: [press ? 192 : 170, press ? -535 : -520], eyes: after ? 'wide' : 'normal', brows: after ? 'worried' : 'neutral', mouth: after ? 'o' : talkMouth('arjun', t, 'flat'), sweat: after ? 1 : 0, look: 0.6, lookY: -0.3, seed: 1250 });
