@@ -100,7 +100,41 @@ for (const n of ['F4', 'A4', 'C5']) { const { L, R } = I.harmonium(m(n), 1.6, { 
 for (const k of [0, 0.5]) { const { L, R } = I.brassNote(m('C5'), BEAT * 0.35, { stab: true, bright: 1.6, seed: 9 + k }); brass.addStereo(L, R, ev.meter + BEAT * (1 + k), 0.1); } // toot-toot
 
 // ---------- the voiceover ----------
-const vo = Voice.speak(sc.vo, { out: path.join(__dirname, 'out'), length: DURATION });
+// Each line: the ElevenLabs take vo/<id>.mp3 if it exists, else an espeak-ng Marathi/Hindi placeholder.
+// Trimmed of silence, levelled, placed at its score time; words share the line by length (for captions);
+// the mouth track comes from the voice bus (lip-sync).
+const fs = require('fs');
+const { execFileSync } = require('child_process');
+function placeVoices(lines) {
+  const dir = path.join(__dirname, 'vo'), out = path.join(__dirname, 'out');
+  fs.mkdirSync(path.join(out, '.vo-ph'), { recursive: true });
+  const vbus = new Bus(N), placed = [];
+  let engine = 'elevenlabs';
+  for (const l of lines) {
+    let f = path.join(dir, l.id + '.mp3');
+    if (!fs.existsSync(f)) {
+      engine = 'mixed';
+      f = path.join(out, '.vo-ph', l.id + '.wav');
+      if (!fs.existsSync(f)) execFileSync('espeak-ng', ['-v', (l.who === 'arjun' ? 'hi' : 'mr') + (l.who === 'aaji' ? '+f3' : '+m3'), '-s', '150', '-w', f, l.text]);
+    }
+    let a = Voice.decode(f);
+    let i0 = 0, i1 = a.length - 1;
+    while (i0 < a.length && Math.abs(a[i0]) < 0.012) i0++;
+    while (i1 > i0 && Math.abs(a[i1]) < 0.012) i1--;
+    a = a.slice(Math.max(0, i0 - 0.02 * SR), Math.min(a.length, i1 + 0.06 * SR));
+    let s2 = 0, c = 0; for (const x of a) if (Math.abs(x) > 0.01) { s2 += x * x; c++; }
+    const g = c ? Math.min(6, 0.12 / Math.sqrt(s2 / c)) : 0;
+    const dur = a.length / SR;
+    vbus.addMono(a.map((x) => x * g), l.at, 1);
+    const ws = l.display.split(/\s+/).filter(Boolean), tot = ws.reduce((q, w) => q + w.length, 0);
+    let acc = 0; const words = ws.map((w) => { const t0 = l.at + (acc / tot) * dur; acc += w.length; return { w, t: +t0.toFixed(3), end: +(l.at + (acc / tot) * dur).toFixed(3) }; });
+    placed.push({ t: +l.at.toFixed(3), end: +(l.at + dur).toFixed(3), text: l.text, display: l.display, alt: l.alt, who: l.who, id: l.id, words });
+  }
+  const json = { engine, lines: placed, mouth: Voice.mouthTrack(vbus, 30) };
+  fs.writeFileSync(path.join(out, 'voice.json'), JSON.stringify(json));
+  return { bus: vbus, engine, lines: placed };
+}
+const vo = placeVoices(sc.vo);
 
 // ---------- mix ----------
 const room = reverb(verb, { room: 0.7, damp: 0.4 });

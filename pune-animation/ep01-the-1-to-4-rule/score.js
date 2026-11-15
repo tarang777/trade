@@ -62,37 +62,40 @@
     return prog;
   })());
 
-  // the voiceover. espeak-ng voices: Bablu en-us (male), Arjun en-gb, Aaji Marathi (mr) + English (female variant).
-  const B = { who: 'bablu', voice: 'en-us+m3', rate: 168 };
-  const A = { who: 'arjun', voice: 'en-gb+m1', rate: 170 };
-  const AJ = { who: 'aaji', voice: 'en-us+f3', rate: 150 };
+  // the voiceover: Marathi (Bablu, Aaji) and Hindi (Arjun, the outsider). Each line has an id; song.js uses
+  // the ElevenLabs take in vo/<id>.mp3 when it exists (espeak-ng placeholder otherwise). `say` is what the
+  // TTS model reads (with eleven_v4 audio tags), `display` the Devanagari caption, `alt` the English subtitle.
+  // voices (ElevenLabs library): Bablu = Samay (Marathi creator), Aaji = Damini (mature Marathi, elderly
+  // direction), Arjun = Yatin (playful Hindi).
+  const VOICES = { bablu: '0tQTGVmSXHGJRH75pubS', aaji: 'hDVWw6CgSn8NdOAeyAnt', arjun: '7M0JpWdLkoBBL8M1moPi' };
+  const L = (id, at, who, say, alt) => ({ id, at, who, say, text: say.replace(/\[[^\]]*\]\s*/g, ''), display: say.replace(/\[[^\]]*\]\s*/g, ''), alt });
   const vo = [
-    { at: T(0, 1.5), text: 'In Pune, even the shutters take a nap.', ...B },
-    { at: T(2, 0.5), text: 'Kay re! Bablu here.', display: 'Kay re! Bablu here.', ...B },
-    { at: T(3, 0.5), text: 'Meet Arjun. First day in Pune.', ...B },
-    { at: T(4, 1.5), text: 'Phone at two percent.', display: 'Phone at 2%.', ...B },
-    { at: T(5, 1), text: 'Bhaiya, any electronics shop. Fast, please!', ...A },
-    { at: T(7, 0), text: 'Time? One oh five P M.', display: 'Time? 1:05 PM.', ...B },
-    { at: T(8, 0.5), text: 'Oh no.', ...B, rate: 120 },
-    { at: T(9, 0.5), text: 'Shop one.', ...B },
-    { at: T(10, 2.5), text: 'Shop two.', ...B },
-    { at: T(12, 0.5), text: 'Shop three!', ...B },
-    { at: T(13, 2.5), text: 'Is there a curfew?!', ...A },
-    { at: T(14, 0.5), text: "Worse. It's lunch. Then vaam kukshi. The post-lunch nap. Sacred.", display: "Worse. It's lunch. Then vamkukshi: the post-lunch nap. Sacred.", ...B },
-    { at: T(17, 1), text: "That's Pune Rule number one. Between one and four, Pune sleeps.", display: "That's Pune Rule #1: between 1 and 4, Pune sleeps.", ...B },
-    { at: T(20, 0.5), text: 'बाळा, काय झालं?', display: 'Bala, kay jhala? (Child, what happened?)', who: 'aaji', voice: 'mr+f3', rate: 140 },
-    { at: T(21, 1), text: 'Charger. Dying.', display: 'Charger… dying…', ...A, rate: 130 },
-    { at: T(22, 1), text: 'Return it by four. And bring poha.', ...AJ },
-    { at: T(25, 0.5), text: 'Pune shops close for three hours. But Pune hearts? Never.', ...B, rate: 150 },
-    { at: T(27, 3), text: "Next ride, Aaji's signboards. Meter down!", display: "Next ride: Aaji's signboards. Meter down!", ...B },
+    L('v01', T(0, 1.5), 'bablu', '[mischievously] पुण्यात ना… दुकानांची शटरं सुद्धा झोप काढतात!', 'In Pune, even shop shutters take a nap!'),
+    L('v02', T(2, 0.5), 'bablu', '[excited] काय रे! मी बबलू — पुण्याची रिक्षा!', "Hey! I'm Bablu, Pune's own auto!"),
+    L('v03', T(3, 0.5), 'bablu', 'हा अर्जुन. पुण्यात पहिलाच दिवस.', 'This is Arjun. First day in Pune.'),
+    L('v04', T(4, 1.5), 'bablu', '[dramatically] आणि फोन… दोन टक्के!', 'And his phone… 2%!'),
+    L('v05', T(5, 1), 'arjun', '[nervous] भैया, कोई भी मोबाइल की दुकान… जल्दी चलो!', 'Bhaiya, any mobile shop… hurry!'),
+    L('v06', T(7, 0), 'bablu', 'वेळ? दुपारचा एक वाजून पाच मिनिटं…', 'Time? Five past one, afternoon…'),
+    L('v07', T(8, 0.5), 'bablu', '[worried] अरे देवा.', 'Oh no.'),
+    L('v08', T(9, 0.5), 'bablu', 'पहिलं दुकान…', 'Shop one…'),
+    L('v09', T(10, 2.5), 'bablu', 'दुसरं…', 'Two…'),
+    L('v10', T(12, 0.5), 'bablu', '[shouting] तिसरं!', 'THREE!'),
+    L('v11', T(13, 2.5), 'arjun', '[surprised] ये क्या है? कर्फ्यू लगा है क्या?!', 'What is this? A curfew?!'),
+    L('v12', T(14, 0.5), 'bablu', '[laughs] कर्फ्यू नाही रे! आधी जेवण… आणि मग वामकुक्षी. पवित्र झोप!', 'No curfew! First lunch… then vamkukshi. The sacred nap!'),
+    L('v13', T(17, 1), 'bablu', '[dramatically] पुण्याचा नियम नंबर एक — एक ते चार, पुणं झोपतं!', 'Pune Rule #1: from 1 to 4, Pune sleeps!'),
+    L('v14', T(20, 0.5), 'aaji', '[elderly voice] बाळा, काय झालं रे?', 'Child, what happened?'),
+    L('v15', T(21, 1), 'arjun', '[tired] आजी… फोन… मर रहा है…', 'Aaji… my phone… is dying…'),
+    L('v16', T(22, 1), 'aaji', '[elderly voice] [warmly] हा घे चार्जर. चार वाजता परत कर… आणि येताना पोहे घेऊन ये!', "Here's a charger. Return it by four… and bring poha!"),
+    L('v17', T(25, 0.5), 'bablu', '[warmly] पुण्यातली दुकानं तीन तास बंद असतात… पण पुणेकरांची मनं? कधीच नाही.', "Pune's shops close for three hours… but Pune's hearts? Never."),
+    L('v18', T(27, 3), 'bablu', '[excited] पुढची राइड — आजीच्या पुणेरी पाट्या! मीटर डाऊन!', "Next ride: Aaji's Puneri signboards! Meter down!"),
   ];
 
   // on-screen word pops (not captions): big comic text
   const pops = [
-    { t: ev.hook, text: 'CLANG!', big: 1 },
-    { t: ev.slam1, text: 'SLAM!', big: 0.8 },
-    { t: ev.slam2, text: 'SLAM!!', big: 1.05 },
-    { t: ev.slam3, text: 'SLAM!!!', big: 1.35 },
+    { t: ev.hook, text: 'खडाड!', big: 1 },
+    { t: ev.slam1, text: 'धाड!', big: 0.8 },
+    { t: ev.slam2, text: 'धाड!!', big: 1.05 },
+    { t: ev.slam3, text: 'धडाम!!!', big: 1.3 },
   ];
 
   const markers = {
@@ -108,6 +111,7 @@
     meter: { t: ev.meter, sync: 'av' },
   };
 
-  const SCORE = { FPS, FORMAT, W, H, SAFE, DURATION, clock, T, BEAT, S, m, chords, chordAt, ev, vo, pops, slams, reopen, markers };
+  const STYLE = 'flat';
+  const SCORE = { STYLE, VOICES, FPS, FORMAT, W, H, SAFE, DURATION, clock, T, BEAT, S, m, chords, chordAt, ev, vo, pops, slams, reopen, markers };
   if (node) module.exports = SCORE; else globalThis.SCORE = SCORE;
 })();
