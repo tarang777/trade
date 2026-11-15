@@ -22,7 +22,7 @@
     hook: T(0),            // the first shutter slams on camera
     lane: T(2),            // Bablu in the Peth lane
     arjun: T(4),           // Arjun, phone at 2%
-    clock: T(7),           // 1:05 pm
+    clock: T(6, 2.5),           // 1:05 pm
     uhoh: T(8, 2.5),         // dun-dun
     shop1Go: T(9), slam1: T(10),
     shop2Go: T(10, 2), slam2: T(11, 2),
@@ -33,9 +33,9 @@
     aaji: T(20),           // Aaji at her balcony
     basket: T(22),         // the basket starts down
     catch: T(24),          // Arjun catches it: the heart begins
-    golden: T(25),         // golden wide, shutters reopen
-    meter: T(29, 2),       // METER DOWN: the click + sting
-    end: T(29, 2),
+    golden: T(25, 2),         // golden wide, shutters reopen
+    meter: T(30),       // METER DOWN: the click + sting
+    end: T(30),
   };
   // the shutters that roll up at 4 pm, one per beat
   const reopen = [0, 1, 2, 3, 4].map((k) => T(26, k));
@@ -72,22 +72,22 @@
   const vo = [
     L('v01', T(0, 1.5), 'bablu', '[mischievously] पुण्यात ना… दुकानांची शटरं सुद्धा झोप काढतात!', 'In Pune, even shop shutters take a nap!'),
     L('v02', T(2, 0.5), 'bablu', '[excited] काय रे! मी बबलू — पुण्याची रिक्षा!', "Hey! I'm Bablu, Pune's own auto!"),
-    L('v03', T(3, 0.5), 'bablu', 'हा अर्जुन. पुण्यात पहिलाच दिवस.', 'This is Arjun. First day in Pune.'),
-    L('v04', T(4, 1.5), 'bablu', '[dramatically] आणि फोन… दोन टक्के!', 'And his phone… 2%!'),
+    L('v03', T(3, 2), 'bablu', 'हा अर्जुन. पुण्यात पहिलाच दिवस.', 'This is Arjun. First day in Pune.'),
+    L('v04', T(4, 2.25), 'bablu', '[dramatically] आणि फोन… दोन टक्के!', 'And his phone… 2%!'),
     L('v05', T(5, 1), 'arjun', '[nervous] भैया, कोई भी मोबाइल की दुकान… जल्दी चलो!', 'Bhaiya, any mobile shop… hurry!'),
-    L('v06', T(7, 0), 'bablu', 'वेळ? दुपारचा एक वाजून पाच मिनिटं…', 'Time? Five past one, afternoon…'),
-    L('v07', T(8, 0.5), 'bablu', '[worried] अरे देवा.', 'Oh no.'),
+    L('v06', T(6, 2.5), 'bablu', 'वेळ? दुपारचा एक वाजून पाच मिनिटं…', 'Time? Five past one, afternoon…'),
+    L('v07', T(8, 0.6), 'bablu', '[worried] अरे देवा.', 'Oh no.'),
     L('v08', T(9, 0.5), 'bablu', 'पहिलं दुकान…', 'Shop one…'),
     L('v09', T(10, 2.5), 'bablu', 'दुसरं…', 'Two…'),
     L('v10', T(12, 0.5), 'bablu', '[shouting] तिसरं!', 'THREE!'),
     L('v11', T(13, 2.5), 'arjun', '[surprised] ये क्या है? कर्फ्यू लगा है क्या?!', 'What is this? A curfew?!'),
-    L('v12', T(14, 0.5), 'bablu', '[laughs] कर्फ्यू नाही रे! आधी जेवण… आणि मग वामकुक्षी. पवित्र झोप!', 'No curfew! First lunch… then vamkukshi. The sacred nap!'),
+    L('v12', T(15, 0), 'bablu', '[laughs] कर्फ्यू नाही रे! आधी जेवण… आणि मग वामकुक्षी. पवित्र झोप!', 'No curfew! First lunch… then vamkukshi. The sacred nap!'),
     L('v13', T(17, 1), 'bablu', '[dramatically] पुण्याचा नियम नंबर एक — एक ते चार, पुणं झोपतं!', 'Pune Rule #1: from 1 to 4, Pune sleeps!'),
     L('v14', T(20, 0.5), 'aaji', '[elderly voice] बाळा, काय झालं रे?', 'Child, what happened?'),
-    L('v15', T(21, 1), 'arjun', '[tired] आजी… फोन… मर रहा है…', 'Aaji… my phone… is dying…'),
+    L('v15', T(21, 2), 'arjun', '[tired] आजी… फोन… मर रहा है…', 'Aaji… my phone… is dying…'),
     L('v16', T(22, 1), 'aaji', '[elderly voice] [warmly] हा घे चार्जर. चार वाजता परत कर… आणि येताना पोहे घेऊन ये!', "Here's a charger. Return it by four… and bring poha!"),
-    L('v17', T(25, 0.5), 'bablu', '[warmly] पुण्यातली दुकानं तीन तास बंद असतात… पण पुणेकरांची मनं? कधीच नाही.', "Pune's shops close for three hours… but Pune's hearts? Never."),
-    L('v18', T(27, 3), 'bablu', '[excited] पुढची राइड — आजीच्या पुणेरी पाट्या! मीटर डाऊन!', "Next ride: Aaji's Puneri signboards! Meter down!"),
+    L('v17', T(25, 2.5), 'bablu', '[warmly] पुण्यातली दुकानं तीन तास बंद असतात… पण पुणेकरांची मनं? कधीच नाही.', "Pune's shops close for three hours… but Pune's hearts? Never."),
+    L('v18', T(28, 1), 'bablu', '[excited] पुढची राइड — आजीच्या पुणेरी पाट्या! मीटर डाऊन!', "Next ride: Aaji's Puneri signboards! Meter down!"),
   ];
 
   // on-screen word pops (not captions): big comic text

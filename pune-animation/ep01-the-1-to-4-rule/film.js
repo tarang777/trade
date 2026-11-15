@@ -286,7 +286,7 @@
     ctx.save(); ctx.fillStyle = 'rgba(255,255,255,0.22)'; ctx.beginPath(); ctx.ellipse(cx - 110, cy - 150, 150, 60, -0.5, 0, Math.PI * 2); ctx.fill(); ctx.restore(); // glass reflection
     G.text(ctx, 'दुपारी १:०५', cx, cy + r + 180, { size: 120, align: 'center', color: '#F6F0E2', stroke: '#2A2320', strokeW: 10, ...DEV });
     // the marigold on the dash
-    for (let k = 0; k < 9; k++) G.ellipse(ctx, 120 + k * 32, 1300 + Math.sin(k) * 8, 18, 18, { fill: k % 2 ? C.marigold : '#F7B733', lw: 2.5, seed: 1330 + k });
+    for (let k = 0; k < 9; k++) G.ellipse(ctx, 120 + k * 32, 1640 + Math.sin(k) * 8, 18, 18, { fill: k % 2 ? C.marigold : '#F7B733', lw: 2.5, seed: 1330 + k });
     if (t >= ev.uhoh) { const a = clamp((t - ev.uhoh) / 0.12); ctx.save(); ctx.globalAlpha = 0.25 * a; ctx.fillStyle = '#E0503E'; ctx.fillRect(0, 0, W, H); ctx.restore(); }
   }
   // 5. The three shops. i = 0,1,2; each bigger.
@@ -556,7 +556,8 @@
     fadeOut: 0.4,
     async init() {
       VO = await Studio.loadJSON('out/voice.json');
-      SUBS = Subs.fromVoice(VO, { maxWords: 5 }).map((x) => { const y = { ...x }; delete y.alt; return y; });
+      SUBS = Subs.fromVoice({ ...VO, lines: VO.lines.map((l) => { const q = { ...l }; delete q.display; delete q.alt; return q; }) }, { maxWords: 5, hold: 0.4 }).sort((x, y) => x.t - y.t);
+      SUBS.forEach((x, i) => { const n = SUBS[i + 1]; if (n && x.end > n.t - 0.03) x.end = n.t - 0.03; });
     },
     draw(ctx, t) {
       film(ctx, t);

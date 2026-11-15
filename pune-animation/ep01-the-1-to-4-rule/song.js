@@ -109,9 +109,9 @@ function placeVoices(lines) {
   const dir = path.join(__dirname, 'vo'), out = path.join(__dirname, 'out');
   fs.mkdirSync(path.join(out, '.vo-ph'), { recursive: true });
   const vbus = new Bus(N), placed = [];
-  let engine = 'elevenlabs';
+  let engine = 'sarvam-bulbul-v3';
   for (const l of lines) {
-    let f = path.join(dir, l.id + '.mp3');
+    let f = ['.wav', '.mp3'].map((e) => path.join(dir, l.id + e)).find((q) => fs.existsSync(q)) || path.join(dir, l.id + '.mp3');
     if (!fs.existsSync(f)) {
       engine = 'mixed';
       f = path.join(out, '.vo-ph', l.id + '.wav');
