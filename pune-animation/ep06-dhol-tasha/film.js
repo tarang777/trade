@@ -298,7 +298,7 @@
     flagPole(ctx, 880, 1080, t, 0.8);
     for (let r = 0; r < 2; r++) for (let k = 0; k < 5; k++) drummer(ctx, 120 + k * 210 + r * 100, 1150 + r * 230, 0.5 + r * 0.12, TROUPE[(k + r * 2) % 5], t, 5100 + r * 50 + k * 10);
     ctx.restore();
-    if (a >= 0 && a < 0.1) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = `rgba(255,200,140,${0.5 * (1 - a / 0.1)})`; ctx.fillRect(-100, -100, W + 200, H + 200); ctx.restore(); }
+    if (false) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = `rgba(255,200,140,${0.5 * (1 - a / 0.1)})`; ctx.fillRect(-100, -100, W + 200, H + 200); ctx.restore(); }
     // labels during "students, doctors, engineers"
     if (t > T(8, 3)) G.decor(() => [['विद्यार्थी', 230, 980], ['डॉक्टर', 540, 990], ['इंजिनिअर', 860, 980]].forEach(([s2, x, y], i) => { const c = ease.outBack(clamp((t - T(8, 3) - i * 0.6) / 0.3), 2); if (c > 0) { ctx.save(); ctx.translate(x, y - 260); ctx.scale(c, c); G.rrect(ctx, -110, -40, 220, 64, 14, { fill: 'rgba(20,20,24,0.85)', lw: 0, seed: 5150 + i }); G.text(ctx, s2, 0, 10, { size: 36, align: 'center', color: C.yellow, ...DEV }); ctx.restore(); } }));
   }
@@ -336,7 +336,6 @@
     G.ellipse(ctx, tx, ty, 190, 46, { fill: rad(ctx, tx - 40, ty - 10, 10, 200, [[0, '#FFF6E0'], [1, '#D8C8A0']]), lw: 0, seed: 5301 });
     for (const sx of [1, -1]) G.line(ctx, [[tx + sx * 1.35 * 120, 1700 - 1.35 * (330 - sx * roll)], [tx + sx * 60, ty - 10]], { color: '#5A3A22', lw: 6, seed: 5302 + sx });
     const g = a - 0.3; if (g > 0 && g < 0.4) G.star(ctx, 600, 1700 - 1.35 * 500, 40 * Math.sin(g / 0.4 * Math.PI), { fill: '#FFFFFF', seed: 1770 });
-    if (a >= 0 && a < 0.1) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = `rgba(255,220,160,${0.55 * (1 - a / 0.1)})`; ctx.fillRect(-100, -100, W + 200, H + 200); ctx.restore(); }
     G.decor(() => G.text(ctx, 'आजी · ताशा', SAFE.x + 20, SAFE.y + 90, { size: 70, color: '#F6F0E2', stroke: '#2A2320', strokeW: 9, ...DEV }));
   }
   // 6. The climax: the full pathak, faster and faster, the flag spinning
@@ -371,7 +370,7 @@
       G.text(ctx, 'पुणं ठेका धरतं!', 0, 130, { size: 100, align: 'center', color: '#F6F0E2', ...DEV });
       ctx.restore();
     }
-    const d = t - ev.unison; if (d >= 0 && d < 0.12) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = `rgba(255,220,170,${0.7 * (1 - d / 0.12)})`; ctx.fillRect(-100, -100, W + 200, H + 200); ctx.restore(); }
+    const d = t - ev.unison; if (false) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = `rgba(255,220,170,${0.7 * (1 - d / 0.12)})`; ctx.fillRect(-100, -100, W + 200, H + 200); ctx.restore(); }
   }
   // 8. Arjun gets the sticks; Ganpati Bappa Morya
   function jamShot(ctx, t) {
