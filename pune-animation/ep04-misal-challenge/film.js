@@ -306,8 +306,8 @@
       if (i === 2) { ctx.save(); const p = lerp(1.35, 1, ease.outBack(clamp(a / 0.15), 2)); ctx.translate(540, 760); ctx.scale(p, p); ctx.translate(-540, -760); }
       misalBowl(ctx, lerp(-400, 540, slide), 760, 230, L.gravy, t, L.heat);
       if (i === 2) ctx.restore();
-      if (i === 2 && a >= 0 && a < 0.12) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = `rgba(220,230,255,${0.85 * (1 - a / 0.12)})`; ctx.fillRect(-100, -100, W + 200, H + 200); ctx.restore(); }
-      if (i === 2) for (let k = 0; k < 2; k++) { const fl = (a >= 0 && a < 0.2) || (a > 1.2 && Math.sin(t * 13 + k * 3) > 0.95); if (fl) G.line(ctx, [[120 + k * 800, 300], [180 + k * 800, 420], [130 + k * 800, 470], [200 + k * 800, 600]], { color: '#FFF6D0', lw: 6, seed: 3150 + k }); }
+      if (false) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = `rgba(220,230,255,${0.85 * (1 - a / 0.12)})`; ctx.fillRect(-100, -100, W + 200, H + 200); ctx.restore(); }
+      if (i === 2) for (let k = 0; k < 2; k++) { const fl = a > 1.2 && Math.sin(t * 13 + k * 3) > 0.95; if (fl) G.line(ctx, [[120 + k * 800, 300], [180 + k * 800, 420], [130 + k * 800, 470], [200 + k * 800, 600]], { color: '#FFF6D0', lw: 6, seed: 3150 + k }); }
       const heat = i === 0 ? 0.15 : i === 1 ? 0.5 + 0.2 * clamp((t - T(11, 3)) / 2) : 0.6;
       const o = i === 0 ? { gesture: 'thumbsUp', eyes: 'happy', brows: 'neutral', mouth: talkMouth('arjun', t, 'grin'), sweat: 0 }
         : i === 1 ? { handL: [-150, -470 + Math.sin(t * 18) * 40], eyes: 'normal', brows: 'worried', mouth: talkMouth('arjun', t, 'flat'), sweat: 0.9 }
