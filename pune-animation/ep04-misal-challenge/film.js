@@ -270,6 +270,7 @@
     const shake = t > ev.hook ? Math.sin(t * 60) * 8 : 0;
     Ch.person(ctx, { x: 540 + shake, y: 2350, s: 3.0, pose: 'stand', style: hot(k), eyes: 'wide', brows: 'worried', mouth: 'open', sweat: 1, seed: 1250 });
     if (t >= ev.hook) { steamPuffs(ctx, 360, 780, t, ev.hook, 7, -1, 1.4); steamPuffs(ctx, 720, 780, t, ev.hook, 7, 1, 1.4); }
+    { const a = t - ev.hook; if (a >= 0 && a < 0.12) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = `rgba(255,255,240,${0.8 * (1 - a / 0.12)})`; ctx.fillRect(-100, -100, W + 200, H + 200); ctx.restore(); } }
     // tears
     for (const ex of [470, 610]) { const p = ((t * 1.5) % 1); ctx.save(); ctx.globalAlpha = 0.85; G.ellipse(ctx, ex, 760 + p * 160, 10, 16, { fill: '#8FD3F2', lw: 0, seed: 3120 }); ctx.restore(); }
   }
@@ -301,9 +302,11 @@
       const L = S.LEVELS[i], a = t - L.t;
       eateryBg(ctx, t, i === 2 ? 0.45 : 0);
       table(ctx, 1080);
-      const slide = ease.outBack(clamp(a / 0.3), 1.6);
+      const slide = i === 2 ? 1 : ease.outBack(clamp(a / 0.3), 1.6);
+      if (i === 2) { ctx.save(); const p = lerp(1.35, 1, ease.outBack(clamp(a / 0.15), 2)); ctx.translate(540, 760); ctx.scale(p, p); ctx.translate(-540, -760); }
       misalBowl(ctx, lerp(-400, 540, slide), 760, 230, L.gravy, t, L.heat);
-      if (i === 2 && a >= 0 && a < 0.12) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = `rgba(220,230,255,${0.6 * (1 - a / 0.12)})`; ctx.fillRect(-100, -100, W + 200, H + 200); ctx.restore(); }
+      if (i === 2) ctx.restore();
+      if (i === 2 && a >= 0 && a < 0.12) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = `rgba(220,230,255,${0.85 * (1 - a / 0.12)})`; ctx.fillRect(-100, -100, W + 200, H + 200); ctx.restore(); }
       if (i === 2) for (let k = 0; k < 2; k++) { const fl = Math.sin(t * 13 + k * 3) > 0.92; if (fl) G.line(ctx, [[120 + k * 800, 300], [180 + k * 800, 420], [130 + k * 800, 470], [200 + k * 800, 600]], { color: '#FFF6D0', lw: 6, seed: 3150 + k }); }
       const heat = i === 0 ? 0.15 : i === 1 ? 0.5 + 0.2 * clamp((t - T(11, 3)) / 2) : 0.6;
       const o = i === 0 ? { gesture: 'thumbsUp', eyes: 'happy', brows: 'neutral', mouth: talkMouth('arjun', t, 'grin'), sweat: 0 }
