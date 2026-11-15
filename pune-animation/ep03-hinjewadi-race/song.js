@@ -46,7 +46,7 @@ for (const b of [drums, bass, pad, keys]) MIX.gate(b, ev.brake - 0.02, ev.cycle,
 fx.addMono(I.scratch(0.45), ev.brake, 0.55); fx.addMono(I.thud(80, 0.12), ev.brake, 0.8);
 fx.addMono(I.noiseSweep(0.5, 3500, 2500, { q: 8 }), ev.brake, 0.12); // tyre squeal
 // the baraat: dhol + shehnai for a bar
-for (let k = 0; k < 8; k++) drums.addMono(I.dhol(k % 2 ? 'ta' : 'dha'), ev.brake + BEAT * (0.5 + k * 0.5), 0.5);
+for (let k = 0; k < 8; k++) drums.addMono(I.dhol(k % 2 ? 'tilli' : 'dagga'), ev.brake + BEAT * (0.5 + k * 0.5), 0.5);
 fx.addMono(I.shehnaiLine([{ t: 0, dur: BEAT, midi: m('A4') }, { t: BEAT, dur: BEAT * 0.5, midi: m('C5') }, { t: BEAT * 1.5, dur: BEAT, midi: m('B4') }, { t: BEAT * 2.5, dur: BEAT, midi: m('A4') }]), ev.brake + BEAT * 0.5, 0.12);
 
 // ---------- the cycle: a calm lofi glide + a bicycle bell ----------
