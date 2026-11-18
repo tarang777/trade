@@ -1,0 +1,398 @@
+{
+  "windows": {
+    "train": [
+      "2013-01-28",
+      "2021-05-21"
+    ],
+    "val": [
+      "2021-05-24",
+      "2024-02-15"
+    ],
+    "hold_out": [
+      "2024-02-16",
+      "2026-11-18"
+    ]
+  },
+  "config": {
+    "iterations": 15,
+    "hypotheses_per_iter": 8,
+    "train_frac": 0.6,
+    "val_frac": 0.2,
+    "min_trades": 30,
+    "min_improvement": 0.05,
+    "val_tolerance": 0.1,
+    "robustness_ratio": 0.5,
+    "capital": 1000000
+  },
+  "trials": 67,
+  "backtests_run": 71,
+  "baseline": {
+    "spec": {
+      "name": "momentum_trend_v1",
+      "entry": {
+        "trend_template": true,
+        "min_rs_pct": 0.8,
+        "max_dist_52w_high": 0.25,
+        "min_above_52w_low": 0.3,
+        "require_breakout": false,
+        "breakout_lookback": 50,
+        "max_contraction": null,
+        "rsi_max": 80.0,
+        "min_volume_ratio": null,
+        "min_adv": 50000000.0
+      },
+      "filters": {
+        "regime_filter": true,
+        "market_vol": null,
+        "max_atr_pct": null
+      },
+      "exit": {
+        "stop_atr_mult": 3.0,
+        "trail_atr_mult": 5.0,
+        "ma_exit": "sma100",
+        "max_hold_days": 126,
+        "min_hold_days": 0,
+        "profit_target_r": null
+      },
+      "risk": {
+        "max_positions": 10,
+        "risk_per_trade": 0.01,
+        "max_position_weight": 0.15,
+        "cost_bps": 25.0
+      },
+      "rank": {
+        "w_mom63": 0.2,
+        "w_mom126": 0.3,
+        "w_mom252": 0.3,
+        "w_high": 0.2,
+        "w_lowvol": 0.0
+      },
+      "rebalance_every": 5
+    },
+    "train": {
+      "start": "2013-01-28",
+      "end": "2021-05-21",
+      "cagr": 0.314329903443763,
+      "vol": 0.17455889791094956,
+      "sharpe": 1.6549110002429794,
+      "sortino": 2.0625312997570435,
+      "max_dd": -0.335775841423932,
+      "calmar": 0.9361301936160066,
+      "exposure": 0.7242979271636523,
+      "final_equity": 9090442.962808006,
+      "trades": 318,
+      "win_rate": 0.4371069182389937,
+      "avg_win": 0.38810847517360525,
+      "avg_loss": -0.09373425947528045,
+      "profit_factor": 2.670940511587459,
+      "expectancy_r": 0.916928929583812,
+      "avg_hold_days": 50.09119496855346,
+      "median_hold_days": 40.0,
+      "pct_hold_3to6m": 0.330188679245283,
+      "exit_mix": {
+        "stop": 0.456,
+        "trail_stop": 0.274,
+        "ma_exit": 0.151,
+        "time": 0.091,
+        "end_of_test": 0.028
+      },
+      "by_regime": {
+        "up/highvol": {
+          "trades": 160,
+          "win_rate": 0.38125,
+          "expectancy_r": 0.31855139443884717,
+          "pnl": 1860610.3166840863
+        },
+        "up/lowvol": {
+          "trades": 158,
+          "win_rate": 0.4936708860759494,
+          "expectancy_r": 1.522880863907827,
+          "pnl": 6210254.742824643
+        }
+      },
+      "objective": 1.3301306457825042
+    },
+    "val": {
+      "start": "2021-05-24",
+      "end": "2024-02-15",
+      "cagr": 0.39222802783242794,
+      "vol": 0.17463127529157135,
+      "sharpe": 1.9864612165022213,
+      "sortino": 2.4364067882608023,
+      "max_dd": -0.2697181698241342,
+      "calmar": 1.4542143307889657,
+      "exposure": 0.6926321859858031,
+      "final_equity": 2439043.8876412353,
+      "trades": 126,
+      "win_rate": 0.4603174603174603,
+      "avg_win": 0.37793155154091757,
+      "avg_loss": -0.10390260534152802,
+      "profit_factor": 3.0694459390913362,
+      "expectancy_r": 0.8787406029316495,
+      "avg_hold_days": 45.23809523809524,
+      "median_hold_days": 36.5,
+      "pct_hold_3to6m": 0.2619047619047619,
+      "exit_mix": {
+        "stop": 0.429,
+        "trail_stop": 0.325,
+        "ma_exit": 0.119,
+        "time": 0.063,
+        "end_of_test": 0.063
+      },
+      "by_regime": {
+        "up/highvol": {
+          "trades": 41,
+          "win_rate": 0.36585365853658536,
+          "expectancy_r": 0.028044930574823254,
+          "pnl": 26442.4818604397
+        },
+        "up/lowvol": {
+          "trades": 85,
+          "win_rate": 0.5058823529411764,
+          "expectancy_r": 1.2890761625390599,
+          "pnl": 1407896.5745198098
+        }
+      },
+      "objective": 1.8427828975060092
+    },
+    "hold_out": {
+      "start": "2024-02-16",
+      "end": "2026-11-18",
+      "cagr": 0.09854179175910294,
+      "vol": 0.16664788426280358,
+      "sharpe": 0.6484473264759257,
+      "sortino": 0.7608776865003423,
+      "max_dd": -0.14352372228858934,
+      "calmar": 0.6865888801362099,
+      "exposure": 0.5669563173734893,
+      "final_equity": 1288184.343325346,
+      "trades": 107,
+      "win_rate": 0.4205607476635514,
+      "avg_win": 0.22674660166597335,
+      "avg_loss": -0.09495626784609791,
+      "profit_factor": 1.5503852648055199,
+      "expectancy_r": 0.287523171910388,
+      "avg_hold_days": 41.55140186915888,
+      "median_hold_days": 37.0,
+      "pct_hold_3to6m": 0.22429906542056074,
+      "exit_mix": {
+        "stop": 0.477,
+        "trail_stop": 0.299,
+        "ma_exit": 0.121,
+        "end_of_test": 0.093,
+        "time": 0.009
+      },
+      "by_regime": {
+        "up/highvol": {
+          "trades": 73,
+          "win_rate": 0.4931506849315068,
+          "expectancy_r": 0.4695745746170909,
+          "pnl": 324914.98792974686
+        },
+        "up/lowvol": {
+          "trades": 34,
+          "win_rate": 0.2647058823529412,
+          "expectancy_r": -0.10335189860694435,
+          "pnl": -39693.653523772715
+        }
+      },
+      "objective": 0.7045220928310659
+    }
+  },
+  "champion": {
+    "spec": {
+      "name": "momentum_trend_v1.i1h2",
+      "entry": {
+        "trend_template": true,
+        "min_rs_pct": 0.8,
+        "max_dist_52w_high": 0.25,
+        "min_above_52w_low": 0.3,
+        "require_breakout": false,
+        "breakout_lookback": 50,
+        "max_contraction": null,
+        "rsi_max": 80.0,
+        "min_volume_ratio": null,
+        "min_adv": 50000000.0
+      },
+      "filters": {
+        "regime_filter": true,
+        "market_vol": null,
+        "max_atr_pct": null
+      },
+      "exit": {
+        "stop_atr_mult": 3.0,
+        "trail_atr_mult": 5.0,
+        "ma_exit": "sma100",
+        "max_hold_days": 126,
+        "min_hold_days": 0,
+        "profit_target_r": null
+      },
+      "risk": {
+        "max_positions": 10,
+        "risk_per_trade": 0.0075,
+        "max_position_weight": 0.15,
+        "cost_bps": 25.0
+      },
+      "rank": {
+        "w_mom63": 0.2,
+        "w_mom126": 0.3,
+        "w_mom252": 0.3,
+        "w_high": 0.2,
+        "w_lowvol": 0.0
+      },
+      "rebalance_every": 5
+    },
+    "train": {
+      "start": "2013-01-28",
+      "end": "2021-05-21",
+      "cagr": 0.23734327938259958,
+      "vol": 0.13878513005822718,
+      "sharpe": 1.605422513555932,
+      "sortino": 1.983103756908021,
+      "max_dd": -0.2949796352556949,
+      "calmar": 0.8046090340333668,
+      "exposure": 0.5773162040975351,
+      "final_equity": 5583353.150955964,
+      "trades": 318,
+      "win_rate": 0.44025157232704404,
+      "avg_win": 0.3846061383338896,
+      "avg_loss": -0.09425896274756336,
+      "profit_factor": 2.6423743563134794,
+      "expectancy_r": 0.9158109901608131,
+      "avg_hold_days": 50.05974842767296,
+      "median_hold_days": 40.0,
+      "pct_hold_3to6m": 0.3333333333333333,
+      "exit_mix": {
+        "stop": 0.453,
+        "trail_stop": 0.28,
+        "ma_exit": 0.151,
+        "time": 0.088,
+        "end_of_test": 0.028
+      },
+      "by_regime": {
+        "up/highvol": {
+          "trades": 161,
+          "win_rate": 0.37888198757763975,
+          "expectancy_r": 0.30415809423332196,
+          "pnl": 901866.8073830298
+        },
+        "up/lowvol": {
+          "trades": 157,
+          "win_rate": 0.5031847133757962,
+          "expectancy_r": 1.5430473993603422,
+          "pnl": 3671798.730964302
+        }
+      },
+      "objective": 1.4038169411221804
+    },
+    "val": {
+      "start": "2021-05-24",
+      "end": "2024-02-15",
+      "cagr": 0.2945041929552603,
+      "vol": 0.13348148411670802,
+      "sharpe": 2.0044999371476666,
+      "sortino": 2.4547680946423016,
+      "max_dd": -0.20833693041689405,
+      "calmar": 1.4135957190400217,
+      "exposure": 0.5295061146690275,
+      "final_equity": 2004733.0442668379,
+      "trades": 126,
+      "win_rate": 0.4603174603174603,
+      "avg_win": 0.3779315515409176,
+      "avg_loss": -0.10390260534152804,
+      "profit_factor": 3.0698309180174377,
+      "expectancy_r": 0.8787406029316495,
+      "avg_hold_days": 45.23809523809524,
+      "median_hold_days": 36.5,
+      "pct_hold_3to6m": 0.2619047619047619,
+      "exit_mix": {
+        "stop": 0.429,
+        "trail_stop": 0.325,
+        "ma_exit": 0.119,
+        "time": 0.063,
+        "end_of_test": 0.063
+      },
+      "by_regime": {
+        "up/highvol": {
+          "trades": 41,
+          "win_rate": 0.36585365853658536,
+          "expectancy_r": 0.028044930574823254,
+          "pnl": 14694.272197607912
+        },
+        "up/lowvol": {
+          "trades": 85,
+          "win_rate": 0.5058823529411764,
+          "expectancy_r": 1.2890761625390599,
+          "pnl": 986982.1573726803
+        }
+      },
+      "objective": 2.044965336373175
+    },
+    "hold_out": {
+      "start": "2024-02-16",
+      "end": "2026-11-18",
+      "cagr": 0.06921311740211133,
+      "vol": 0.1325012321090866,
+      "sharpe": 0.5723295530892439,
+      "sortino": 0.6560056535804512,
+      "max_dd": -0.12152460351187722,
+      "calmar": 0.5695399565351948,
+      "exposure": 0.4488134779991247,
+      "final_equity": 1197600.8148370853,
+      "trades": 107,
+      "win_rate": 0.4205607476635514,
+      "avg_win": 0.22674660166597335,
+      "avg_loss": -0.09495626784609792,
+      "profit_factor": 1.4905213130923973,
+      "expectancy_r": 0.287523171910388,
+      "avg_hold_days": 41.55140186915888,
+      "median_hold_days": 37.0,
+      "pct_hold_3to6m": 0.22429906542056074,
+      "exit_mix": {
+        "stop": 0.477,
+        "trail_stop": 0.299,
+        "ma_exit": 0.121,
+        "end_of_test": 0.093,
+        "time": 0.009
+      },
+      "by_regime": {
+        "up/highvol": {
+          "trades": 73,
+          "win_rate": 0.4931506849315068,
+          "expectancy_r": 0.4695745746170909,
+          "pnl": 239553.6418953728
+        },
+        "up/lowvol": {
+          "trades": 34,
+          "win_rate": 0.2647058823529412,
+          "expectancy_r": -0.10335189860694435,
+          "pnl": -43992.65089671201
+        }
+      },
+      "objective": 0.6284043194443841
+    }
+  },
+  "deflated_sharpe_train": 0.9923677726735392,
+  "psr_hold_out": 0.8222145041200539,
+  "verdict": "CANDIDATE FOR PAPER TRADING: profitable out-of-sample (hold-out PSR 0.82) and survives multiple-testing deflation (DSR 0.99). Loop changes: no clear out-of-sample gain vs baseline (objective -0.08); treat champion and baseline as equivalent",
+  "lineage": [
+    {
+      "iteration": 0,
+      "name": "momentum_trend_v1",
+      "train_obj": 1.3301306457825042,
+      "val_obj": 1.8427828975060092,
+      "rationale": "baseline",
+      "changes": {}
+    },
+    {
+      "iteration": 1,
+      "name": "momentum_trend_v1.i1h2",
+      "train_obj": 1.4038169411221804,
+      "val_obj": 2.044965336373175,
+      "rationale": "Deep drawdown: cut risk per trade",
+      "changes": {
+        "risk.risk_per_trade": 0.0075
+      }
+    }
+  ]
+}

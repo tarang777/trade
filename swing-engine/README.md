@@ -120,7 +120,27 @@ Model portfolio (positions the system would hold right now): symbol entry_date e
 
 When the regime filter blocks new entries, the list is still shown, marked *WATCH ONLY*.
 
-## 4. Sample results (synthetic data, so they show the mechanics only)
+## 4. Results
+
+### Real data: Nifty 500, 2012 – Nov 2026 (`runs/nifty500-real/`)
+
+`python -m swing --source yfinance --universe universes/nifty500.txt evolve --iterations 15 --hypotheses 8`
+
+| period | strategy CAGR | Sharpe | MaxDD | Nifty 50 CAGR | Nifty 50 Sharpe | Nifty 50 MaxDD |
+|---|---|---|---|---|---|---|
+| train 2013–2021 | 31.4% | 1.65 | −34% | 12.0% | 0.73 | −38% |
+| **hold-out Feb 2024 – Nov 2026 (unseen)** | **9.9%** | **0.65** | **−14%** | 5.1% | 0.44 | −16% |
+
+- The strategy beat the index on unseen data, but by far less than in training. Expect
+  the training numbers to be optimistic.
+- Of 67 variants, only one change was promoted (risk per trade 1% → 0.75%). It made no
+  difference out-of-sample. **The baseline rules were already about as good as this search
+  space allows.**
+- Survivorship bias inflates these numbers: the universe is *today's* Nifty 500.
+- Seven unadjusted splits/demergers in Yahoo data (CGCL, GPIL, MOTILALOFS, VEDL, HEGAM, JSL,
+  PATANJALI) are back-adjusted automatically by `fix_discontinuities`.
+
+### Synthetic data (shows the mechanics only)
 
 `python -m swing --seed N evolve --iterations 10`:
 

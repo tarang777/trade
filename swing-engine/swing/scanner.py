@@ -46,9 +46,10 @@ def scan(spec: StrategySpec, p: Panel, capital: float = 1_000_000.0, top: int = 
     if len(open_pos):
         open_pos = open_pos[["symbol", "entry_date", "entry_px", "exit_px", "ret", "hold_days"]].rename(
             columns={"exit_px": "last_close", "ret": "open_return"})
-        open_pos["time_exit_due"] = [p.dates[min(len(p.dates) - 1, p.dates.searchsorted(e) + spec.exit.max_hold_days)]
-                                     if p.dates.searchsorted(e) + spec.exit.max_hold_days < len(p.dates)
-                                     else pd.NaT for e in open_pos.entry_date]
+        # Trading days -> calendar estimate (business days; ignores exchange holidays).
+        open_pos["time_exit_due"] = [(pd.Timestamp(e) + pd.offsets.BDay(spec.exit.max_hold_days)).date()
+                                     for e in open_pos.entry_date]
+        open_pos["entry_date"] = pd.to_datetime(open_pos.entry_date).dt.date
     if len(cands):
         held = set(open_pos.symbol) if len(open_pos) else set()
         cands["held"] = cands.symbol.isin(held)

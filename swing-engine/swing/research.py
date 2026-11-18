@@ -65,6 +65,8 @@ class RuleResearcher:
         regimes = {r: v for r, v in m.get("by_regime", {}).items() if v["trades"] >= 8}
         mix = m.get("exit_mix", {})
 
+        seen: set[str] = set()
+
         def add(rationale, changes):
             changes = {p: v for p, v in changes.items() if spec.get(p) != v}
             if not changes:
@@ -74,7 +76,9 @@ class RuleResearcher:
                     validate_change(p, v)
             except ValueError:
                 return
-            if spec.with_changes(changes).fingerprint() not in tried:
+            fp = spec.with_changes(changes).fingerprint()
+            if fp not in tried and fp not in seen:
+                seen.add(fp)
                 hyps.append(Hypothesis(rationale, changes))
 
         if regimes:

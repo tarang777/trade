@@ -40,7 +40,30 @@ class RawData:
         return list(self.ohlcv["close"].columns)
 
 
+def fix_discontinuities(df: pd.DataFrame, max_drop: float = 0.60, symbol: str = "") -> pd.DataFrame:
+    """Back-adjust unadjusted splits / bonuses / demergers.
+
+    Free data feeds sometimes miss corporate actions, which then show up as a
+    one-day "crash" (e.g. a 1:5 split looks like -80%). A real one-day fall of
+    60%+ in an index stock is extremely rare, so such moves are treated as
+    corporate actions: earlier prices are scaled by the ratio so that holders
+    do not book a fictitious loss.
+    """
+    df = df.copy()
+    r = df["close"] / df["close"].shift(1)
+    for d in r.index[r <= 1 - max_drop]:
+        ratio = r.loc[d]
+        before = df.index < d
+        for c in ("open", "high", "low", "close"):
+            df.loc[before, c] *= ratio
+        if "volume" in df:
+            df.loc[before, "volume"] /= ratio
+        print(f"  adjusted {symbol} {d.date()}: price discontinuity x{ratio:.3f} (likely split/demerger)")
+    return df
+
+
 def _assemble(per_symbol: dict[str, pd.DataFrame], bench: pd.DataFrame, min_history: int = 260) -> RawData:
+    per_symbol = {s: fix_discontinuities(d, symbol=s) for s, d in per_symbol.items()}
     per_symbol = {s: d for s, d in per_symbol.items() if d["close"].notna().sum() >= min_history}
     if not per_symbol:
         raise ValueError("no symbols with enough history")
@@ -115,11 +138,33 @@ class YFinanceProvider:
         df.to_csv(path)
         return _normalise(df)
 
+    def _prefetch(self, tickers: list[str], chunk: int = 50) -> None:
+        """Batch-download uncached tickers (much faster than one request each)."""
+        import yfinance as yf
+
+        self.cache.mkdir(parents=True, exist_ok=True)
+        todo = [t for t in tickers if not (self.cache / f"{t.replace('^', '_')}.csv").exists()]
+        for k in range(0, len(todo), chunk):
+            batch = todo[k:k + chunk]
+            print(f"  downloading {k + len(batch)}/{len(todo)} ...", flush=True)
+            data = yf.download(batch, start=self.start, end=self.end, auto_adjust=False, progress=False,
+                               group_by="ticker", threads=True)
+            for t in batch:
+                try:
+                    df = data[t].dropna(how="all") if len(batch) > 1 else data
+                except KeyError:
+                    continue
+                if isinstance(df.columns, pd.MultiIndex):
+                    df.columns = df.columns.get_level_values(-1)
+                if not df.empty:
+                    df.to_csv(self.cache / f"{t.replace('^', '_')}.csv")
+
     def load(self, symbols: list[str] | None = None) -> RawData:
         symbols = symbols or NSE_LARGE_CAPS
         bench = self._fetch(self.benchmark)
         if bench.empty:
             raise RuntimeError(f"could not download benchmark {self.benchmark}")
+        self._prefetch([s + self.suffix for s in symbols])
         per = {}
         for s in symbols:
             df = self._fetch(s + self.suffix)

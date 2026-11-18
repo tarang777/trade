@@ -213,19 +213,27 @@ def evolve(panel: Panel, base: StrategySpec, researcher, cfg: LoopConfig, out_di
 
 
 def _verdict(b_tr, b_hold, c_tr, c_hold, dsr, psr_hold, unchanged: bool) -> str:
+    """Two questions: does the strategy work out-of-sample, and did the loop's changes help?"""
     if c_hold.get("trades", 0) < 10:
         return "INCONCLUSIVE: too few hold-out trades"
     if c_hold["sharpe"] <= 0:
         return "REJECT: champion loses money out-of-sample"
+    if dsr < 0.9 or psr_hold < 0.8:
+        strategy = (f"CAUTION: profitable out-of-sample but weak evidence "
+                    f"(deflated Sharpe {dsr:.2f}, hold-out PSR {psr_hold:.2f}) -> paper-trade first")
+    else:
+        strategy = (f"CANDIDATE FOR PAPER TRADING: profitable out-of-sample (hold-out PSR {psr_hold:.2f}) "
+                    f"and survives multiple-testing deflation (DSR {dsr:.2f})")
     if unchanged:
-        return ("BASELINE KEPT: no hypothesis survived; baseline hold-out "
-                + ("positive" if b_hold["sharpe"] > 0 else "negative"))
-    decay = (c_hold["objective"] - b_hold["objective"])
-    if decay < -0.1:
-        return "REJECT: improvements did not generalise (champion worse than baseline out-of-sample)"
-    if dsr < 0.9:
-        return f"CAUTION: beats baseline out-of-sample, but deflated Sharpe {dsr:.2f} < 0.90 -> paper-trade first"
-    return "CANDIDATE FOR PAPER TRADING: improvement held out-of-sample and survives multiple-testing deflation"
+        return strategy + ". Loop changes: none survived; baseline kept"
+    gain = c_hold["objective"] - b_hold["objective"]
+    if gain < -0.1:
+        return ("REJECT CHANGES: champion is worse than baseline out-of-sample -> keep the baseline. "
+                "Baseline: " + ("profitable" if b_hold["sharpe"] > 0 else "unprofitable") + " out-of-sample")
+    if gain <= 0.1:
+        return strategy + (f". Loop changes: no clear out-of-sample gain vs baseline "
+                           f"(objective {gain:+.2f}); treat champion and baseline as equivalent")
+    return strategy + f". Loop changes: improved on baseline out-of-sample (objective {gain:+.2f})"
 
 
 def render_report(s: dict) -> str:
