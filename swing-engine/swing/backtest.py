@@ -76,6 +76,7 @@ def run_backtest(spec: StrategySpec, p: Panel, start=None, end=None, capital: fl
             "entry_px": pos.entry_px, "exit_px": px, "shares": pos.shares, "pnl": pnl,
             "ret": pnl / gross_in, "r_multiple": (px - pos.entry_px) / pos.init_risk,
             "hold_days": i - pos.entry_i, "exit_reason": reason, "entry_regime": pos.regime,
+            "stop": pos.stop,
         })
         del positions[pos.sym]
 
@@ -131,9 +132,8 @@ def run_backtest(spec: StrategySpec, p: Panel, start=None, end=None, capital: fl
         mv = sum(ps.shares * C[i, ps.sym] for ps in positions.values())
         eq[k] = cash + mv
         expo[k] = mv / eq[k] if eq[k] > 0 else 0.0
-
-        # 6. scan
-        if i < i1 and (i - i0) % spec.rebalance_every == 0:
+        # 6. scan days are anchored to the data start (not the window start) so they stay stable
+        if i < i1 and i % spec.rebalance_every == 0:
             free = rk.max_positions - (len(positions) - len(pending_exit))
             if free > 0:
                 cand = np.flatnonzero(mask[i])

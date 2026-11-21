@@ -19,7 +19,7 @@ from .strategy import StrategySpec
 
 def _panel(a):
     prov = make_provider(a.source, csv_dir=a.csv_dir, benchmark=a.benchmark, start=a.start, seed=a.seed,
-                         suffix=a.suffix)
+                         suffix=a.suffix, refresh=a.refresh)
     symbols = load_universe_file(a.universe) if a.universe else None
     raw = prov.load(symbols)
     print(f"loaded {len(raw.symbols)} symbols, {len(raw.bench)} bars "
@@ -41,6 +41,7 @@ def main(argv=None):
     ap.add_argument("--start", default="2012-01-01")
     ap.add_argument("--seed", type=int, default=7, help="synthetic data seed")
     ap.add_argument("--capital", type=float, default=1_000_000)
+    ap.add_argument("--refresh", action="store_true", help="re-download prices (yfinance) instead of using the cache")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     b = sub.add_parser("backtest", help="backtest a spec and print diagnostics")
@@ -63,9 +64,13 @@ def main(argv=None):
     s.add_argument("--asof")
     s.add_argument("--csv-out")
 
+    d = sub.add_parser("dashboard", help="export dashboard data files from an evolve run")
+    d.add_argument("--run", required=True, help="run folder holding summary.json and champion.json")
+    d.add_argument("--top", type=int, default=25)
+
     a = ap.parse_args(argv)
     p = _panel(a)
-    spec = _spec(a.spec)
+    spec = _spec(getattr(a, "spec", None))
 
     if a.cmd == "backtest":
         r = run_backtest(spec, p, a.frm or p.dates[260], a.to, a.capital)
@@ -83,6 +88,11 @@ def main(argv=None):
         cfg = LoopConfig(iterations=a.iterations, hypotheses_per_iter=a.hypotheses, capital=a.capital)
         evolve(p, spec, researcher, cfg, out)
         print(f"\nreport: {out}/report.md   champion spec: {out}/champion.json")
+    elif a.cmd == "dashboard":
+        from .export import export_dashboard
+
+        out = export_dashboard(p, a.run, a.capital, a.top)
+        print(f"dashboard data written to {out}/")
     elif a.cmd == "scan":
         r = scan(spec, p, a.capital, a.top, a.asof)
         print(format_scan(r))

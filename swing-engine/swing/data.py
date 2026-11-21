@@ -119,8 +119,9 @@ class YFinanceProvider:
     """
 
     def __init__(self, suffix: str = ".NS", benchmark: str = "^NSEI", start: str = "2012-01-01",
-                 end: str | None = None, cache_dir: str = "data_cache"):
+                 end: str | None = None, cache_dir: str = "data_cache", refresh: bool = False):
         self.suffix, self.benchmark, self.start, self.end = suffix, benchmark, start, end
+        self.refresh = refresh  # re-download everything instead of using the cache
         self.cache = Path(cache_dir)
 
     def _fetch(self, ticker: str) -> pd.DataFrame:
@@ -143,7 +144,7 @@ class YFinanceProvider:
         import yfinance as yf
 
         self.cache.mkdir(parents=True, exist_ok=True)
-        todo = [t for t in tickers if not (self.cache / f"{t.replace('^', '_')}.csv").exists()]
+        todo = [t for t in tickers if self.refresh or not (self.cache / f"{t.replace('^', '_')}.csv").exists()]
         for k in range(0, len(todo), chunk):
             batch = todo[k:k + chunk]
             print(f"  downloading {k + len(batch)}/{len(todo)} ...", flush=True)
@@ -161,6 +162,7 @@ class YFinanceProvider:
 
     def load(self, symbols: list[str] | None = None) -> RawData:
         symbols = symbols or NSE_LARGE_CAPS
+        self._prefetch([self.benchmark])
         bench = self._fetch(self.benchmark)
         if bench.empty:
             raise RuntimeError(f"could not download benchmark {self.benchmark}")
@@ -249,5 +251,6 @@ def make_provider(source: str, **kw):
     if source == "yfinance":
         return YFinanceProvider(suffix=kw.get("suffix", ".NS"), benchmark=kw.get("benchmark") or "^NSEI",
                                 start=kw.get("start") or "2012-01-01",
-                                cache_dir=kw.get("cache_dir") or os.path.join(os.getcwd(), "data_cache"))
+                                cache_dir=kw.get("cache_dir") or os.path.join(os.getcwd(), "data_cache"),
+                                refresh=bool(kw.get("refresh")))
     raise ValueError(f"unknown source {source!r}")

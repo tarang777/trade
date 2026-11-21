@@ -44,7 +44,7 @@ def scan(spec: StrategySpec, p: Panel, capital: float = 1_000_000.0, top: int = 
     t = replay.trades
     open_pos = t[t.exit_reason == "end_of_test"].copy() if len(t) else pd.DataFrame()
     if len(open_pos):
-        open_pos = open_pos[["symbol", "entry_date", "entry_px", "exit_px", "ret", "hold_days"]].rename(
+        open_pos = open_pos[["symbol", "entry_date", "entry_px", "exit_px", "ret", "hold_days", "stop"]].rename(
             columns={"exit_px": "last_close", "ret": "open_return"})
         # Trading days -> calendar estimate (business days; ignores exchange holidays).
         open_pos["time_exit_due"] = [(pd.Timestamp(e) + pd.offsets.BDay(spec.exit.max_hold_days)).date()

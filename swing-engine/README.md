@@ -129,16 +129,25 @@ When the regime filter blocks new entries, the list is still shown, marked *WATC
 | period | strategy CAGR | Sharpe | MaxDD | Nifty 50 CAGR | Nifty 50 Sharpe | Nifty 50 MaxDD |
 |---|---|---|---|---|---|---|
 | train 2013–2021 | 31.4% | 1.65 | −34% | 12.0% | 0.73 | −38% |
-| **hold-out Feb 2024 – Nov 2026 (unseen)** | **9.9%** | **0.65** | **−14%** | 5.1% | 0.44 | −16% |
+| **hold-out Feb 2024 – Nov 2026 (unseen)** | **3.5%** | **0.29** | **−16%** | 5.1% | 0.44 | −16% |
 
-- The strategy beat the index on unseen data, but by far less than in training. Expect
-  the training numbers to be optimistic.
+- **The out-of-sample edge is small and fragile.** An earlier run, identical except that
+  the weekly scan fell on a different weekday, made 9.9% a year (Sharpe 0.65) over the same
+  hold-out. The current run trails the Nifty. Scan days are now anchored to the start of
+  the data, so results no longer shift as new days are added. The sensitivity itself is
+  real, though: average over all five scan weekdays before trusting a result.
 - Of 67 variants, only one change was promoted (risk per trade 1% → 0.75%). It made no
-  difference out-of-sample. **The baseline rules were already about as good as this search
-  space allows.**
+  difference out-of-sample.
 - Survivorship bias inflates these numbers: the universe is *today's* Nifty 500.
 - Seven unadjusted splits/demergers in Yahoo data (CGCL, GPIL, MOTILALOFS, VEDL, HEGAM, JSL,
   PATANJALI) are back-adjusted automatically by `fix_discontinuities`.
+
+### Dashboard
+
+`python -m swing --source yfinance --universe universes/nifty500.txt --refresh dashboard --run runs/nifty500-real`
+downloads fresh prices, re-runs the scan and writes the dashboard's data files to
+`runs/nifty500-real/dashboard/` (status, picks, portfolio, results, equity, market, research),
+each as `{rows, meta}` JSON with the exporter's source code in `meta`.
 
 ### Synthetic data (shows the mechanics only)
 
