@@ -1,0 +1,42 @@
+{
+  "name": "momentum_trend_v1.i1h2",
+  "entry": {
+    "trend_template": true,
+    "min_rs_pct": 0.8,
+    "max_dist_52w_high": 0.25,
+    "min_above_52w_low": 0.3,
+    "require_breakout": false,
+    "breakout_lookback": 50,
+    "max_contraction": null,
+    "rsi_max": 80.0,
+    "min_volume_ratio": null,
+    "min_adv": 50000000.0
+  },
+  "filters": {
+    "regime_filter": true,
+    "market_vol": null,
+    "max_atr_pct": null
+  },
+  "exit": {
+    "stop_atr_mult": 3.0,
+    "trail_atr_mult": 5.0,
+    "ma_exit": "sma100",
+    "max_hold_days": 126,
+    "min_hold_days": 0,
+    "profit_target_r": null
+  },
+  "risk": {
+    "max_positions": 10,
+    "risk_per_trade": 0.0075,
+    "max_position_weight": 0.15,
+    "cost_bps": 25.0
+  },
+  "rank": {
+    "w_mom63": 0.2,
+    "w_mom126": 0.3,
+    "w_mom252": 0.3,
+    "w_high": 0.2,
+    "w_lowvol": 0.0
+  },
+  "rebalance_every": 5
+}
